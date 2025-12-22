@@ -1,0 +1,12 @@
+{
+    "files.exclude": {
+    "**/bin": true,
+    "**/obj": true
+    },
+    "cSpell.words": [
+        "appdb",
+        "apppass",
+        "Npgsql",
+        "Thermus"
+    ]
+}
