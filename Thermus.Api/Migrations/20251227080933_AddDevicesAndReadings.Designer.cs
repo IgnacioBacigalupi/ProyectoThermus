@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Thermus.Api.Infrastructure;
@@ -11,9 +12,11 @@ using Thermus.Api.Infrastructure;
 namespace Thermus.Api.Migrations
 {
     [DbContext(typeof(ThermusDbContext))]
-    partial class ThermusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251227080933_AddDevicesAndReadings")]
+    partial class AddDevicesAndReadings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,16 +35,13 @@ namespace Thermus.Api.Migrations
 
                     b.Property<string>("ExternalId")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Location")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -63,19 +63,19 @@ namespace Thermus.Api.Migrations
                         .HasColumnType("integer");
 
                     b.Property<decimal>("Humidity")
-                        .HasPrecision(6, 2)
-                        .HasColumnType("numeric(6,2)");
+                        .HasPrecision(5, 2)
+                        .HasColumnType("numeric(5,2)");
 
                     b.Property<DateTime>("TakenAtUtc")
-                        .HasColumnType("timestamptz");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("Temperature")
-                        .HasPrecision(6, 2)
-                        .HasColumnType("numeric(6,2)");
+                        .HasPrecision(5, 2)
+                        .HasColumnType("numeric(5,2)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DeviceId", "TakenAtUtc");
+                    b.HasIndex("DeviceId");
 
                     b.ToTable("Readings");
                 });
