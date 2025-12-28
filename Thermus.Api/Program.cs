@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Thermus.Api.Infrastructure;
+using Thermus.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+builder.Services.AddScoped<IReadingServices, ReadingServices>();
 builder.Services.AddDbContext<ThermusDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
