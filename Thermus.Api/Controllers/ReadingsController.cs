@@ -24,8 +24,8 @@ namespace Thermus.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ReadingsDto dto)
         {
-            await _readingServices.CreateAsync(dto);
-            return Ok(dto.ExternalId);
+            var result = await _readingServices.CreateAsync(dto);
+            return Ok(result);
         }
 
     }
