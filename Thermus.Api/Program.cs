@@ -15,6 +15,13 @@ builder.Services.AddDbContext<ThermusDbContext>(options =>
 
 var app = builder.Build();
 
+// Aplico migraciones automáticamente al arrancar (crea/actualiza tablas si hace falta)
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ThermusDbContext>();
+    db.Database.Migrate();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -22,7 +29,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.MapControllers();
 
 
