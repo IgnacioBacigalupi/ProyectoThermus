@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:16
+    container_name: thermus-db
+    environment:
+      POSTGRES_DB: appdb
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: apppass
+    ports:
+      - "5432:5432"
+    volumes:
+      - thermus_pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ./Thermus.Api
+    container_name: thermus-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Default: Host=db;Port=5432;Database=appdb;Username=app;Password=apppass
+    ports:
+      - "5073:5073"
+    depends_on:
+      - db
+    restart: unless-stopped
+
+volumes:
+  thermus_pgdata:
