@@ -20,6 +20,8 @@ namespace Thermus.Api.Services
 
         public async Task<int> CreateAsync(ReadingsDto dto, CancellationToken ct = default)
         {
+            
+
             var device = await _db.Devices.FirstOrDefaultAsync(x => x.ExternalId == dto.ExternalId);
             if (device == null)
             {
@@ -38,6 +40,11 @@ namespace Thermus.Api.Services
                 Humidity = dto.Humidity,
                 TakenAtUtc = DateTime.UtcNow,
             };
+            if(reading.Humidity > 70 && device.ExternalId == "sensor-baño")
+            {
+                // Aquí podrías agregar la lógica para enviar una alerta, como enviar un correo electrónico o una notificación.
+                Console.WriteLine("Alerta: Alta humedad detectada en el sensor del baño.");
+            }
             _db.Readings.Add(reading);
 
             await _db.SaveChangesAsync();

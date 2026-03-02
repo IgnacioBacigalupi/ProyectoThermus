@@ -17,13 +17,16 @@ namespace Thermus.Api.Controllers
     {
         private readonly IReadingServices _readingServices;
         public ReadingsController(IReadingServices readingServices)
+        
         {
+            
             _readingServices = readingServices;
         }
         
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ReadingsDto dto)
         {
+            Console.WriteLine($"ALERTA Trace={HttpContext.TraceIdentifier} HumedadAlta ...");
             var result = await _readingServices.CreateAsync(dto);
             return Ok(result);
         }
