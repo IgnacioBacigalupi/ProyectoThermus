@@ -12,20 +12,20 @@ services:
       - thermus_pgdata:/var/lib/postgresql/data
     restart: unless-stopped
 
-  api:
-    build:
-      context: .
-      dockerfile: Thermus.Api/Dockerfile
-    container_name: thermus-api
-    environment:
-      ASPNETCORE_ENVIRONMENT: Production
-      ASPNETCORE_URLS: http://0.0.0.0:5073
-      ConnectionStrings__Default: Host=db;Port=5432;Database=appdb;Username=app;Password=apppass
-    expose:
-      - "5073"
-    depends_on:
-      - db
-    restart: unless-stopped
+api:
+  build:
+    context: ./Thermus.Api
+    dockerfile: Dockerfile
+  container_name: thermus-api
+  environment:
+    ASPNETCORE_ENVIRONMENT: Production
+    ASPNETCORE_URLS: http://0.0.0.0:5073
+    ConnectionStrings__Default: Host=db;Port=5432;Database=appdb;Username=app;Password=apppass
+  expose:
+    - "5073"
+  depends_on:
+    - db
+  restart: unless-stopped
 
   frontend:
     build:

@@ -1,23 +1,17 @@
-FROM node:20-alpine AS build
-WORKDIR /app
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
 
-COPY package*.json ./
-RUN npm ci
+COPY Thermus.Api.csproj ./
+RUN dotnet restore ./Thermus.Api.csproj
 
 COPY . .
-RUN npm run build
+RUN dotnet publish ./Thermus.Api.csproj -c Release -o /app/publish
 
-FROM nginx:alpine
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+WORKDIR /app
+COPY --from=build /app/publish .
 
-COPY --from=build /app/dist /tmp/dist
+ENV ASPNETCORE_URLS=http://0.0.0.0:5073
+EXPOSE 5073
 
-RUN set -eux; \
-    BROWSER_DIR="$(find /tmp/dist -maxdepth 3 -type d -name browser | head -n 1)"; \
-    if [ -n "$BROWSER_DIR" ]; then \
-      cp -r "$BROWSER_DIR"/* /usr/share/nginx/html; \
-    else \
-      cp -r /tmp/dist/* /usr/share/nginx/html; \
-    fi
-
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
+ENTRYPOINT ["dotnet", "Thermus.Api.dll"]
