@@ -33,7 +33,7 @@ namespace Thermus.Api.Services
                 };
                 _db.Devices.Add(device);
             }
-            var reading = new Entities.Reading
+            var reading = new Reading
             {
                 Device = device,
                 Temperature = dto.Temperature,

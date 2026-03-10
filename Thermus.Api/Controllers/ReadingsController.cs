@@ -19,7 +19,6 @@ namespace Thermus.Api.Controllers
         public ReadingsController(IReadingServices readingServices)
         
         {
-            
             _readingServices = readingServices;
         }
         
