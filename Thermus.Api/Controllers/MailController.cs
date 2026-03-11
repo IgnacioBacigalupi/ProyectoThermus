@@ -21,5 +21,6 @@ public class MailController : ControllerBase
         
         await _email.SendAsync("2021redes@gmail.com", "Prueba Brevo", "Si recibís esto, ya quedó andando.");
         return Ok("Enviado");
+        
     }
 }
