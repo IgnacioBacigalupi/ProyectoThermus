@@ -52,5 +52,19 @@ namespace Thermus.Api.Services
             return reading.Id;
         
         }
+
+        public async Task<LecturaDto> LecturaUltAsync()
+        {
+            return await _db.Readings
+                .OrderByDescending(x => x.TakenAtUtc)
+                .Select(x => new LecturaDto
+                {
+                    Temperature = x.Temperature,
+                    Humidity = x.Humidity
+                })
+                .FirstAsync();
+        }
     }
+
+
 }

@@ -17,7 +17,6 @@ namespace Thermus.Api.Controllers
     {
         private readonly IReadingServices _readingServices;
         public ReadingsController(IReadingServices readingServices)
-        
         {
             _readingServices = readingServices;
         }
@@ -27,6 +26,13 @@ namespace Thermus.Api.Controllers
         {
             Console.WriteLine($"ALERTA Trace={HttpContext.TraceIdentifier} HumedadAlta ...");
             var result = await _readingServices.CreateAsync(dto);
+            return Ok(result);
+        }
+
+        [HttpGet("ultima")]
+        public async Task<ActionResult<LecturaDto>>ObtenerUltimaLectura()
+        {
+            var result = await _readingServices.LecturaUltAsync();
             return Ok(result);
         }
 

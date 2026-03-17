@@ -9,5 +9,7 @@ namespace Thermus.Api.Services
     public interface IReadingServices
     {
         Task<int> CreateAsync(ReadingsDto dto, CancellationToken ct = default);
+
+         Task<LecturaDto> LecturaUltAsync();
     }
 }
