@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, afterNextRender } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ReadingService } from '../../services/reading.service';
 import { UltimaLecturaPorDispositivo } from '../../models/UltimaLecturaPorDispositivo';
 
@@ -9,7 +9,7 @@ import { UltimaLecturaPorDispositivo } from '../../models/UltimaLecturaPorDispos
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
-export class Home {
+export class Home implements OnInit {
 
   private readingService = inject(ReadingService);
 
@@ -17,10 +17,8 @@ export class Home {
   isLoading = true;
   errorMessage = '';
 
-  constructor() {
-    afterNextRender(() => {
-      this.loadReadings();
-    });
+  ngOnInit(): void {
+    this.loadReadings();
   }
 
   loadReadings(): void {
@@ -29,10 +27,12 @@ export class Home {
 
     this.readingService.getLatestReadingsByDevice().subscribe({
       next: (data) => {
+        console.log('Lecturas recibidas:', data);
         this.readingsByDevice = data;
         this.isLoading = false;
       },
-      error: () => {
+      error: (err) => {
+        console.error('Error cargando lecturas:', err);
         this.errorMessage = 'No pude cargar las lecturas de los dispositivos.';
         this.isLoading = false;
       }
