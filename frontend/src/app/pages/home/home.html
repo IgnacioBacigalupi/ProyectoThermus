@@ -1,10 +1,25 @@
-<p>Esta es la pagina de inicio</p>
 
-<div class="sensor-card">
-  <div class="sensor-card-content">
-    <h3 class="sensor-card-title">Última lectura</h3>
-    <p class="sensor-card-temp">24.1 °C</p>
-    <p class="sensor-card-humidity">Humedad: 30.6 %</p>
-    <p class="sensor-card-time">Actualizado: 10:42</p>
-  </div>
+@if (isLoading) {
+  <p>Cargando lecturas...</p>
+}
+
+@if (errorMessage) {
+  <p>{{ errorMessage }}</p>
+}
+
+@if (!isLoading && readingsByDevice.length === 0) {
+  <p>No hay dispositivos con lecturas todavía.</p>
+}
+
+<div class="sensor-grid">
+  @for (reading of readingsByDevice; track reading.deviceId) {
+    <div class="sensor-card">
+      <div class="sensor-card-content">
+        <h3 class="sensor-card-title">{{ getCardTitle(reading) }}</h3>
+        <p class="sensor-card-temp">{{ reading.temperature }} °C</p>
+        <p class="sensor-card-humidity">Humedad: {{ reading.humidity }} %</p>
+        <p class="sensor-card-time">Actualizado: {{ formatTime(reading.takenAtUtc) }}</p>
+      </div>
+    </div>
+  }
 </div>

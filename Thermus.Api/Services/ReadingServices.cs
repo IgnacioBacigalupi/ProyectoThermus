@@ -64,6 +64,42 @@ namespace Thermus.Api.Services
                 })
                 .FirstAsync();
         }
+
+           public async Task<List<UltimaLecturaPorDispositivoDto>> ObtenerUltimasPorDispositivoAsync()
+        {
+            var result = await _db.Devices
+                .AsNoTracking()
+                .Select(device => new
+                {
+                    Device = device,
+                    UltimaLectura = _db.Readings
+                        .Where(r => r.DeviceId == device.Id)
+                        .OrderByDescending(r => r.TakenAtUtc)
+                        .Select(r => new
+                        {
+                            r.Temperature,
+                            r.Humidity,
+                            r.TakenAtUtc
+                        })
+                        .FirstOrDefault()
+                })
+                .Where(x => x.UltimaLectura != null)
+                .Select(x => new UltimaLecturaPorDispositivoDto
+                {
+                    DeviceId = x.Device.Id,
+                    ExternalId = x.Device.ExternalId,
+                    Name = x.Device.Name,
+                    Location = x.Device.Location,
+                    Temperature = x.UltimaLectura!.Temperature,
+                    Humidity = x.UltimaLectura.Humidity,
+                    TakenAtUtc = x.UltimaLectura.TakenAtUtc
+                })
+                .OrderBy(x => x.Location)
+                .ThenBy(x => x.Name)
+                .ToListAsync();
+
+            return result;
+        }
     }
 
 

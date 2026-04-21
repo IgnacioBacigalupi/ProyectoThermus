@@ -5,6 +5,9 @@ using Thermus.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Acá quiero ver qué connection string está tomando de verdad la app
+Console.WriteLine("CONN STRING REAL: " + builder.Configuration.GetConnectionString("Default"));
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

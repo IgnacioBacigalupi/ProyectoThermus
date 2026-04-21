@@ -4,50 +4,50 @@ services:
     container_name: thermus-db-dev
     environment:
       POSTGRES_DB: appdb
-      POSTGRES_USER: app
-      POSTGRES_PASSWORD: apppass
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - thermus_pgdata_dev:/var/lib/postgresql/data
 
-  api:
+  api-dev:
+    profiles: ["fullstack"]
     image: mcr.microsoft.com/dotnet/sdk:8.0
     container_name: thermus-api-dev
-    working_dir: /src
-    volumes:
-      - ./Thermus.Api:/src
-      - thermus_nuget_cache:/root/.nuget/packages
+    working_dir: /src/Thermus.Api
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://0.0.0.0:5073
-      ConnectionStrings__Default: Host=db;Port=5432;Database=appdb;Username=app;Password=apppass
       DOTNET_USE_POLLING_FILE_WATCHER: "1"
-    command: >
-      sh -c "dotnet restore && dotnet watch run --urls http://0.0.0.0:5073"
+      ConnectionStrings__Default: Host=db;Port=5432;Database=appdb;Username=postgres;Password=postgres
     ports:
       - "5073:5073"
+    volumes:
+      - ./:/src
+      - thermus_nuget_cache:/root/.nuget/packages
+    command: sh -c "dotnet restore && dotnet watch run --urls http://0.0.0.0:5073"
     depends_on:
       - db
 
-  frontend:
+  frontend-dev:
+    profiles: ["fullstack"]
     image: node:20-alpine
     container_name: thermus-frontend-dev
     working_dir: /app
-    volumes:
-      - ./frontend:/app
-      - thermus_front_node_modules:/app/node_modules
     environment:
       CHOKIDAR_USEPOLLING: "true"
       WATCHPACK_POLLING: "true"
-      NG_ALLOWED_HOSTS: "localhost,127.0.0.1"
-    command: ["sh","-lc","npm ci && npx ng serve ThermusApp --host 0.0.0.0 --port 4200"]
     ports:
       - "4200:4200"
+    volumes:
+      - ./frontend:/app
+      - thermus_frontend_node_modules:/app/node_modules
+    command: sh -c "npm ci && npm start -- --host 0.0.0.0 --port 4200 --allowed-hosts=all"
     depends_on:
-      - api
+      - api-dev
 
 volumes:
   thermus_pgdata_dev:
-  thermus_front_node_modules:
   thermus_nuget_cache:
+  thermus_frontend_node_modules:

@@ -20,7 +20,7 @@ namespace Thermus.Api.Controllers
         {
             _readingServices = readingServices;
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ReadingsDto dto)
         {
@@ -30,9 +30,16 @@ namespace Thermus.Api.Controllers
         }
 
         [HttpGet("ultima")]
-        public async Task<ActionResult<LecturaDto>>ObtenerUltimaLectura()
+        public async Task<ActionResult<LecturaDto>> ObtenerUltimaLectura()
         {
             var result = await _readingServices.LecturaUltAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("ultimas-por-dispositivo")]
+        public async Task<ActionResult<List<UltimaLecturaPorDispositivoDto>>> ObtenerUltimasPorDispositivo()
+        {
+            var result = await _readingServices.ObtenerUltimasPorDispositivoAsync();
             return Ok(result);
         }
 

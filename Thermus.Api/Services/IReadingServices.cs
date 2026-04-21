@@ -11,5 +11,7 @@ namespace Thermus.Api.Services
         Task<int> CreateAsync(ReadingsDto dto, CancellationToken ct = default);
 
          Task<LecturaDto> LecturaUltAsync();
+
+         Task<List<UltimaLecturaPorDispositivoDto>> ObtenerUltimasPorDispositivoAsync();
     }
 }
