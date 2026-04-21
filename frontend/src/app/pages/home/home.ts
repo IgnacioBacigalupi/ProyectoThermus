@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ReadingService } from '../../services/reading.service';
 import { UltimaLecturaPorDispositivo } from '../../models/UltimaLecturaPorDispositivo';
 
@@ -12,29 +12,43 @@ import { UltimaLecturaPorDispositivo } from '../../models/UltimaLecturaPorDispos
 export class Home implements OnInit {
 
   private readingService = inject(ReadingService);
+  private cdr = inject(ChangeDetectorRef);
 
   readingsByDevice: UltimaLecturaPorDispositivo[] = [];
   isLoading = true;
   errorMessage = '';
 
   ngOnInit(): void {
+    console.log('Entro a Home');
     this.loadReadings();
   }
 
   loadReadings(): void {
+    console.log('Entro a loadReadings');
+
     this.isLoading = true;
     this.errorMessage = '';
 
     this.readingService.getLatestReadingsByDevice().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         console.log('Lecturas recibidas:', data);
-        this.readingsByDevice = data;
+        console.log('Es array:', Array.isArray(data));
+        console.log('Cantidad:', data?.length);
+
+        this.readingsByDevice = Array.isArray(data) ? [...data] : [];
         this.isLoading = false;
+        this.errorMessage = '';
+
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error cargando lecturas:', err);
-        this.errorMessage = 'No pude cargar las lecturas de los dispositivos.';
+
+        this.readingsByDevice = [];
         this.isLoading = false;
+        this.errorMessage = 'No pude cargar las lecturas de los dispositivos.';
+
+        this.cdr.detectChanges();
       }
     });
   }
@@ -47,3 +61,4 @@ export class Home implements OnInit {
     return new Date(dateUtc).toLocaleString('es-ES');
   }
 }
+
