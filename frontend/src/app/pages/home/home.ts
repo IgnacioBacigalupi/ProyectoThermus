@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, afterNextRender } from '@angular/core';
 import { ReadingService } from '../../services/reading.service';
 import { UltimaLecturaPorDispositivo } from '../../models/UltimaLecturaPorDispositivo';
 
@@ -9,7 +9,7 @@ import { UltimaLecturaPorDispositivo } from '../../models/UltimaLecturaPorDispos
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
-export class Home implements OnInit {
+export class Home {
 
   private readingService = inject(ReadingService);
 
@@ -17,8 +17,10 @@ export class Home implements OnInit {
   isLoading = true;
   errorMessage = '';
 
-  ngOnInit(): void {
-    this.loadReadings();
+  constructor() {
+    afterNextRender(() => {
+      this.loadReadings();
+    });
   }
 
   loadReadings(): void {
@@ -44,5 +46,4 @@ export class Home implements OnInit {
   formatTime(dateUtc: string): string {
     return new Date(dateUtc).toLocaleString('es-ES');
   }
-
 }
