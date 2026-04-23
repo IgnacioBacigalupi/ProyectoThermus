@@ -13,5 +13,7 @@ namespace Thermus.Api.Services
          Task<LecturaDto> LecturaUltAsync();
 
          Task<List<UltimaLecturaPorDispositivoDto>> ObtenerUltimasPorDispositivoAsync();
+
+         Task<List<ReadingHistoryDto>> ObtenerUltimasLecturasPorDispositivoAsync(int deviceId, int take = 50);
     }
 }

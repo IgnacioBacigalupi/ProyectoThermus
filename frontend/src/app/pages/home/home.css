@@ -1,42 +1,242 @@
 .sensor-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 16px;
-  margin-top: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 320px));
+  gap: 14px;
+  margin-top: 16px;
+  justify-content: start;
 }
 
 .sensor-card {
-  background-color: #f3f4f6;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  min-height: 166px;
+  perspective: 1800px;
+}
+
+.sensor-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 166px;
+  transition: transform 0.45s ease, filter 0.45s ease;
+  transform-style: preserve-3d;
+}
+
+.sensor-card-flipped .sensor-card-inner {
+  transform: rotateY(180deg);
+}
+
+.sensor-card-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 13px;
+  border-radius: 10px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  backface-visibility: hidden;
+}
+
+.sensor-card-front {
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.95), rgba(243, 244, 246, 0.92) 42%, rgba(234, 237, 242, 0.96) 100%);
+  border: 1px solid #e5e7eb;
+}
+
+.sensor-card-back {
+  background-color: #000;
+  color: #44ff44;
+  transform: rotateY(180deg);
+  border: 1px solid #163116;
+}
+
+.sensor-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .sensor-card-content {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  gap: 8px;
+  justify-content: flex-start;
+  gap: 14px;
+  min-height: 0;
+}
+
+.sensor-card-main-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
 }
 
 .sensor-card-title {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   font-weight: 600;
+  line-height: 1.3;
+}
+
+.sensor-card-button {
+  border: none;
+  border-radius: 999px;
+  padding: 5px 9px;
+  background: #111827;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.74rem;
+  line-height: 1;
+}
+
+.sensor-card-button-back {
+  background: #44ff44;
+  color: #000;
 }
 
 .sensor-card-temp {
   margin: 0;
   font-size: 2rem;
   font-weight: 700;
+  letter-spacing: -0.03em;
 }
 
-.sensor-card-humidity {
+.sensor-card-reading-block {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-top: 4px;
+  flex: 1;
+}
+
+.sensor-card-reading-label {
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.72rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sensor-card-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(17, 24, 39, 0.08);
+}
+
+.sensor-card-humidity-chip {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: baseline;
+  gap: 4px;
+  width: fit-content;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(17, 24, 39, 0.06);
+  flex-shrink: 0;
+}
+
+.sensor-card-humidity-label {
+  font-size: 0.68rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sensor-card-humidity-value {
+  font-size: 0.92rem;
+  color: #111827;
 }
 
 .sensor-card-time {
   margin: 0;
-  font-size: 0.9rem;
-  color: #555;
+  margin-top: 10px;
+  font-size: 0.74rem;
+  color: #4b5563;
+}
+
+.sensor-card-back .sensor-card-title {
+  color: #44ff44;
+}
+
+.sensor-history {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 0;
+}
+
+.sensor-history-head {
+  display: grid;
+  grid-template-columns: 60px 74px 1fr;
+  gap: 6px;
+  padding: 0 0 4px;
+  border-bottom: 1px solid #163116;
+  color: #2edb2e;
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sensor-history-list {
+  display: grid;
+  flex: 1;
+  gap: 0;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.sensor-history-item {
+  display: grid;
+  grid-template-columns: 60px 74px 1fr;
+  gap: 6px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(68, 255, 68, 0.12);
+  background: transparent;
+  font-size: 0.7rem;
+  line-height: 1.2;
+}
+
+.sensor-history-item span,
+.sensor-history-message {
+  margin: 0;
+  color: #44ff44;
+}
+
+.sensor-history-item span:last-child {
+  color: #9dff9d;
+}
+
+@media (max-width: 640px) {
+  .sensor-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sensor-card {
+    min-height: 210px;
+  }
+
+  .sensor-card-inner {
+    min-height: 210px;
+  }
+
+  .sensor-card-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sensor-card-main-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sensor-history-head,
+  .sensor-history-item {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
 }

@@ -43,5 +43,12 @@ namespace Thermus.Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet("dispositivo/{deviceId:int}/ultimas")]
+        public async Task<ActionResult<List<ReadingHistoryDto>>> ObtenerUltimasLecturasPorDispositivo(int deviceId)
+        {
+            var result = await _readingServices.ObtenerUltimasLecturasPorDispositivoAsync(deviceId);
+            return Ok(result);
+        }
+
     }
 }

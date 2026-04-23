@@ -1,4 +1,3 @@
-
 @if (isLoading) {
   <p>Cargando lecturas...</p>
 }
@@ -13,12 +12,75 @@
 
 <div class="sensor-grid">
   @for (reading of readingsByDevice; track reading.deviceId) {
-    <div class="sensor-card">
-      <div class="sensor-card-content">
-        <h3 class="sensor-card-title">{{ getCardTitle(reading) }}</h3>
-        <p class="sensor-card-temp">{{ reading.temperature }} °C</p>
-        <p class="sensor-card-humidity">Humedad: {{ reading.humidity }} %</p>
-        <p class="sensor-card-time">Actualizado: {{ formatTime(reading.takenAtUtc) }}</p>
+    <div class="sensor-card" [class.sensor-card-flipped]="isCardFlipped(reading.deviceId)">
+      <div class="sensor-card-inner">
+        <div class="sensor-card-face sensor-card-front">
+          <div class="sensor-card-header">
+            <h3 class="sensor-card-title">{{ getCardTitle(reading) }}</h3>
+            <button class="sensor-card-button" type="button" (click)="toggleCard(reading)">
+              Ver historial
+            </button>
+          </div>
+
+          <div class="sensor-card-content">
+            <div class="sensor-card-main-row">
+              <div class="sensor-card-reading-block">
+                <p class="sensor-card-reading-label">Temperatura actual</p>
+                <p class="sensor-card-temp">{{ reading.temperature }} °C</p>
+              </div>
+
+              <div class="sensor-card-humidity-chip">
+                <span class="sensor-card-humidity-label">Humedad</span>
+                <strong class="sensor-card-humidity-value">{{ reading.humidity }} %</strong>
+              </div>
+            </div>
+
+            <div class="sensor-card-footer">
+              <p class="sensor-card-time">Actualizado: {{ formatTime(reading.takenAtUtc) }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sensor-card-face sensor-card-back">
+          <div class="sensor-card-header">
+            <h3 class="sensor-card-title">{{ getCardTitle(reading) }}</h3>
+            <button class="sensor-card-button sensor-card-button-back" type="button" (click)="toggleCard(reading)">
+              Volver
+            </button>
+          </div>
+
+          <div class="sensor-history">
+            @if (historyLoadingByDevice[reading.deviceId]) {
+              <p class="sensor-history-message">Cargando historial...</p>
+            }
+
+            @if (historyErrorByDevice[reading.deviceId]) {
+              <p class="sensor-history-message">{{ historyErrorByDevice[reading.deviceId] }}</p>
+            }
+
+            @if (!historyLoadingByDevice[reading.deviceId] && !historyErrorByDevice[reading.deviceId] && getHistory(reading.deviceId).length === 0) {
+              <p class="sensor-history-message">No hay lecturas para este sensor.</p>
+            }
+
+            @if (getHistory(reading.deviceId).length > 0) {
+              <div class="sensor-history-head">
+                <span>Temp</span>
+                <span>Humedad</span>
+                <span>Fecha y hora</span>
+              </div>
+
+              <div class="sensor-history-list">
+                @for (historyItem of getHistory(reading.deviceId); track historyItem.takenAtUtc) {
+                  <div class="sensor-history-item">
+                    <span>{{ historyItem.temperature }} °C</span>
+                    <span>{{ historyItem.humidity }} %</span>
+                    <span>{{ formatTime(historyItem.takenAtUtc) }}</span>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
       </div>
     </div>
   }

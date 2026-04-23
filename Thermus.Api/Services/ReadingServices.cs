@@ -65,7 +65,7 @@ namespace Thermus.Api.Services
                 .FirstAsync();
         }
 
-           public async Task<List<UltimaLecturaPorDispositivoDto>> ObtenerUltimasPorDispositivoAsync()
+        public async Task<List<UltimaLecturaPorDispositivoDto>> ObtenerUltimasPorDispositivoAsync()
         {
             var result = await _db.Devices
                 .AsNoTracking()
@@ -99,6 +99,22 @@ namespace Thermus.Api.Services
                 .ToListAsync();
 
             return result;
+        }
+
+        public async Task<List<ReadingHistoryDto>> ObtenerUltimasLecturasPorDispositivoAsync(int deviceId, int take = 50)
+        {
+            return await _db.Readings
+                .AsNoTracking()
+                .Where(x => x.DeviceId == deviceId)
+                .OrderByDescending(x => x.TakenAtUtc)
+                .Take(take)
+                .Select(x => new ReadingHistoryDto
+                {
+                    Temperature = x.Temperature,
+                    Humidity = x.Humidity,
+                    TakenAtUtc = x.TakenAtUtc
+                })
+                .ToListAsync(); 
         }
     }
 
