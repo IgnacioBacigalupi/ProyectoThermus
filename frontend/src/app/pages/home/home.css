@@ -15,7 +15,7 @@
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: 250px;
+  min-height: 166px;
   transition: transform 0.45s ease, filter 0.45s ease;
   transform-style: preserve-3d;
 }
@@ -221,7 +221,7 @@
   }
 
   .sensor-card-inner {
-    min-height: 210px;
+    min-height: 250px;
   }
 
   .sensor-card-header {
